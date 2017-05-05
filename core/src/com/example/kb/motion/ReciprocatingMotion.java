@@ -2,6 +2,7 @@ package com.example.kb.motion;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 public class ReciprocatingMotion extends ApplicationAdapter {
 
     private static final float WORLD_SIZE = 600;
-    private static final float CIRCLE_RADIUS = WORLD_SIZE / 30;
+    private static final float CIRCLE_RADIUS = 5;
     private static final float MOVEMENT_DISTANCE = WORLD_SIZE / 3;
     private static final float CYCLE_TIME = 2.0f;
 
@@ -55,7 +56,11 @@ public class ReciprocatingMotion extends ApplicationAdapter {
         float cyclesPassed = secondsFromStart / CYCLE_TIME;
         float currentCycleState = cyclesPassed % 1;
 
-        shapeRenderer.circle(worldCenterX + MathUtils.sin(currentCycleState * MathUtils.PI * 2) * MOVEMENT_DISTANCE, worldCenterY, CIRCLE_RADIUS);
+//        shapeRenderer.circle(worldCenterX + MathUtils.sin(currentCycleState * MathUtils.PI * 2) * MOVEMENT_DISTANCE, worldCenterY, CIRCLE_RADIUS);
+        float multiCircleBeginY = worldCenterY - worldCenterY / 2;
+        float multiCircleEndY = worldCenterY + worldCenterY / 2;
+
+        renderWaveReciprocatingCircles(currentCycleState, worldCenterX, multiCircleBeginY, multiCircleEndY, 30);
 
         shapeRenderer.end();
     }
@@ -64,5 +69,11 @@ public class ReciprocatingMotion extends ApplicationAdapter {
     public void dispose() {
         super.dispose();
         shapeRenderer.dispose();
+    }
+
+    private void renderWaveReciprocatingCircles(float currentCycleState, float beginX, float beginY, float endY, int numberOfCircles){
+        for(float i = 1; i <= numberOfCircles; i++){
+            shapeRenderer.circle(beginX + MathUtils.sin((currentCycleState + i/numberOfCircles) * MathUtils.PI * 2) * MOVEMENT_DISTANCE, beginY + (endY - beginY) / numberOfCircles * i, CIRCLE_RADIUS);
+        }
     }
 }
